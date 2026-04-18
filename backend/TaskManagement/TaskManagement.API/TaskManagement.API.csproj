@@ -10,4 +10,26 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Common\Exceptions\" />
+    <Folder Include="Common\Middleware\" />
+    <Folder Include="Common\Helpers\" />
+    <Folder Include="Common\Behaviors\" />
+    <Folder Include="Domain\Entities\" />
+    <Folder Include="Domain\Enums\" />
+    <Folder Include="Domain\Interfaces\" />
+    <Folder Include="Features\Auth\Login\" />
+    <Folder Include="Features\Auth\Register\" />
+    <Folder Include="Features\Tasks\CreateTask\" />
+    <Folder Include="Features\Tasks\GetTasks\" />
+    <Folder Include="Features\Tasks\GetTaskById\" />
+    <Folder Include="Features\Tasks\DeleteTask\" />
+    <Folder Include="Features\Tasks\UpdateTask\" />
+    <Folder Include="Features\Users\GetUserProfile\" />
+    <Folder Include="Features\Users\UpdateUserProfile\" />
+    <Folder Include="Infrastructure\Data\" />
+    <Folder Include="Infrastructure\Configurations\" />
+    <Folder Include="Infrastructure\Repositories\" />
+  </ItemGroup>
+
 </Project>
