@@ -1,0 +1,7 @@
+# .NET
+backend/bin/
+backend/obj/
+
+# React
+frontend/node_modules/
+frontend/build/
