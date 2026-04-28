@@ -1,10 +1,6 @@
-using FluentValidation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
-using TaskManagement.API.Common.Behaviors;
 using TaskManagement.API.Common.Middleware;
-using TaskManagement.API.Infrastructure.Data;
+using TaskManagement.API.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,20 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog((context, config) =>
     config.ReadFrom.Configuration(context.Configuration));
 
-// Database
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// MediatR
-builder.Services.AddMediatR(cfg =>
-    cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
-
-// FluentValidation
-builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
-
-// Pipeline Behaviors
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+// Extensions
+builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddJwt(builder.Configuration);
+builder.Services.AddApplication();
 
 // Controllers
 builder.Services.AddControllers();
@@ -36,7 +22,6 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Middleware
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -45,6 +30,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 

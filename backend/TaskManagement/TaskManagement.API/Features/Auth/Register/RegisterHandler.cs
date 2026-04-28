@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using BCrypt.Net;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.API.Common.ApiResponse;
 using TaskManagement.API.Common.Exceptions;
@@ -19,7 +20,7 @@ namespace TaskManagement.API.Features.Auth.Register
             {
                 FullName = command.FullName,
                 Email = command.Email,
-                PasswordHash = BCrypt.Net.BCrypt.HashPassword(command.Password)
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(command.Password),
             };
 
             await db.Users.AddAsync(user, ct);

@@ -31,7 +31,6 @@
   <ItemGroup>
     <Folder Include="Common\Helpers\" />
     <Folder Include="Domain\Interfaces\" />
-    <Folder Include="Features\Auth\Login\" />
     <Folder Include="Features\Tasks\CreateTask\" />
     <Folder Include="Features\Tasks\GetTasks\" />
     <Folder Include="Features\Tasks\GetTaskById\" />
@@ -39,7 +38,6 @@
     <Folder Include="Features\Tasks\UpdateTask\" />
     <Folder Include="Features\Users\GetUserProfile\" />
     <Folder Include="Features\Users\UpdateUserProfile\" />
-    <Folder Include="Infrastructure\Repositories\" />
   </ItemGroup>
 
 </Project>

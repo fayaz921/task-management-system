@@ -176,3 +176,4 @@ E:\task-management-system\backend\TaskManagement\TaskManagement.API\bin\Debug\ne
 E:\task-management-system\backend\TaskManagement\TaskManagement.API\bin\Debug\net10.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
 E:\task-management-system\backend\TaskManagement\TaskManagement.API\bin\Debug\net10.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
 E:\task-management-system\backend\TaskManagement\TaskManagement.API\bin\Debug\net10.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+E:\task-management-system\backend\TaskManagement\TaskManagement.API\bin\Debug\net10.0\BCrypt.Net-Next.dll
