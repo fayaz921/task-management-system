@@ -1,6 +1,12 @@
-# .NET
-backend/bin/
-backend/obj/
+# Visual Studio
+**/.vs/
+
+# .NET build output
+**/bin/
+**/obj/
+
+# Logs
+**/Logs/
 
 # React
 frontend/node_modules/
