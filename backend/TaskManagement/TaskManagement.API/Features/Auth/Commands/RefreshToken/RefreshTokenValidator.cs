@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace TaskManagement.API.Features.Auth.RefreshToken
+namespace TaskManagement.API.Features.Auth.Commands.RefreshToken
 {
     public class RefreshTokenValidator : AbstractValidator<RefreshTokenCommand>
     {

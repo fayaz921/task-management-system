@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using TaskManagement.API.Features.Auth.Login;
-using TaskManagement.API.Features.Auth.RefreshToken;
-using TaskManagement.API.Features.Auth.Register;
+using TaskManagement.API.Features.Auth.Commands.Login;
+using TaskManagement.API.Features.Auth.Commands.RefreshToken;
+using TaskManagement.API.Features.Auth.Commands.Register;
 
 namespace TaskManagement.API.Features.Auth
 {

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace TaskManagement.API.Features.Auth.Register
+namespace TaskManagement.API.Features.Auth.Commands.Register
 {
     public class RegisterValidator : AbstractValidator<RegisterCommand>
     {

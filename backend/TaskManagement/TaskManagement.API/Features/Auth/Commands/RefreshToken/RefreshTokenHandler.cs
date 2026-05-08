@@ -2,11 +2,10 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.API.Common.ApiResponse;
 using TaskManagement.API.Common.Exceptions;
-using TaskManagement.API.Features.Auth.Login;
 using TaskManagement.API.Infrastructure.Data;
 using TaskManagement.API.Infrastructure.Services.JWT;
 
-namespace TaskManagement.API.Features.Auth.RefreshToken
+namespace TaskManagement.API.Features.Auth.Commands.RefreshToken
 {
     public class RefreshTokenHandler(AppDbContext db, ITokenService tokenService)
         : IRequestHandler<RefreshTokenCommand, ApiResponse<AuthDto>>

@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace TaskManagement.API.Features.Auth.Login
+namespace TaskManagement.API.Features.Auth.Commands.Login
 {
     public class LoginValidator : AbstractValidator<LoginCommand>
     {
