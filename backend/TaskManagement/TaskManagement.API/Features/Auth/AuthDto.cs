@@ -1,4 +1,4 @@
-﻿namespace TaskManagement.API.Features.Auth.Login
+﻿namespace TaskManagement.API.Features.Auth
 {
     public class AuthDto
     {

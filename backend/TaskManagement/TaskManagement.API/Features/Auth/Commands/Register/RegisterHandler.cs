@@ -6,7 +6,7 @@ using TaskManagement.API.Common.Exceptions;
 using TaskManagement.API.Domain.Entities;
 using TaskManagement.API.Infrastructure.Data;
 
-namespace TaskManagement.API.Features.Auth.Register
+namespace TaskManagement.API.Features.Auth.Commands.Register
 {
     public class RegisterHandler(AppDbContext db) : IRequestHandler<RegisterCommand, ApiResponse<string>>
     {

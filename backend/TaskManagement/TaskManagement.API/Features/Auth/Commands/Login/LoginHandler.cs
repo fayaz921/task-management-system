@@ -6,7 +6,7 @@ using TaskManagement.API.Common.ApiResponse;
 using TaskManagement.API.Infrastructure.Data;
 using TaskManagement.API.Infrastructure.Services.JWT;
 
-namespace TaskManagement.API.Features.Auth.Login
+namespace TaskManagement.API.Features.Auth.Commands.Login
 {
     public class LoginHandler(AppDbContext appDbContext,ITokenService tokenService) : IRequestHandler<LoginCommand, ApiResponse<AuthDto>>
     {

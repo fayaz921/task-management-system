@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using TaskManagement.API.Common.ApiResponse;
 
-namespace TaskManagement.API.Features.Auth.Register
+namespace TaskManagement.API.Features.Auth.Commands.Register
 {
     public record RegisterCommand(
         string FullName,
