@@ -12,6 +12,7 @@ namespace TaskManagement.API.Features.Admin.Queries.GetAllTasks
         public async Task<ApiResponse<List<TaskDto>>> Handle(GetAllTasksQuery query, CancellationToken ct)
         {
             var tasks = await db.Tasks
+                .Where(t => !t.IsDeleted)
                 .Select(t => t.ToDto())
                 .ToListAsync(ct);
 

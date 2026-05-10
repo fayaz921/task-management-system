@@ -11,7 +11,8 @@ namespace TaskManagement.API.Features.Tasks.Queries.GetTaskById
     {
         public async Task<ApiResponse<TaskDto>> Handle(GetTaskByIdQuery query, CancellationToken ct)
         {
-            var task = await db.Tasks.FirstOrDefaultAsync(t => t.Id == query.Id && t.UserId == query.UserId, ct);
+            var task = await db.Tasks
+                .FirstOrDefaultAsync(t => t.Id == query.Id && t.UserId == query.UserId && !t.IsDeleted, ct);
             if (task is null)
                 throw new NotFoundException($"Task with id {query.Id} not found");
 

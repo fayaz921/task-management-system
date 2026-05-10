@@ -10,11 +10,14 @@ namespace TaskManagement.API.Features.Tasks.Commands.DeleteTask
     {
         public async Task<ApiResponse<string>> Handle(DeleteTaskCommand command, CancellationToken ct)
         {
-            var task = await db.Tasks.FirstOrDefaultAsync(t => t.Id == command.Id && t.UserId == command.UserId, ct);
+            var task = await db.Tasks
+                .FirstOrDefaultAsync(t => t.Id == command.Id && t.UserId == command.UserId && !t.IsDeleted, ct);
             if (task is null)
                 throw new NotFoundException($"Task with id {command.Id} not found");
 
-            db.Tasks.Remove(task);
+            task.IsDeleted = true;
+            task.DeletedAt = DateTime.UtcNow;
+
             await db.SaveChangesAsync(ct);
 
             return ApiResponse<string>.Ok("Task deleted successfully");

@@ -11,7 +11,8 @@ namespace TaskManagement.API.Features.Tasks.Commands.UpdateTaskStatus
     {
         public async Task<ApiResponse<TaskDto>> Handle(UpdateTaskStatusCommand command, CancellationToken ct)
         {
-            var task = await db.Tasks.FirstOrDefaultAsync(t => t.Id == command.Id && t.UserId == command.UserId, ct);
+            var task = await db.Tasks
+                .FirstOrDefaultAsync(t => t.Id == command.Id && t.UserId == command.UserId && !t.IsDeleted, ct);
             if (task is null)
                 throw new NotFoundException($"Task with id {command.Id} not found");
 

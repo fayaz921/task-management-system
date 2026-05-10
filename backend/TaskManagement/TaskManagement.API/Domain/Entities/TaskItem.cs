@@ -12,6 +12,8 @@ namespace TaskManagement.API.Domain.Entities
         public DateTime DueDate { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedAt { get; set; }
         public Guid UserId { get; set; }
         public User User { get; set; } = null!;
     }

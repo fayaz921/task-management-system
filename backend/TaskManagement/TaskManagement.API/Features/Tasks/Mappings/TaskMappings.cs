@@ -17,6 +17,8 @@ namespace TaskManagement.API.Features.Tasks.Mappings
                 DueDate = task.DueDate,
                 CreatedAt = task.CreatedAt,
                 UpdatedAt = task.UpdatedAt,
+                IsDeleted = task.IsDeleted,
+                DeletedAt = task.DeletedAt,
                 UserId = task.UserId
             };
         }

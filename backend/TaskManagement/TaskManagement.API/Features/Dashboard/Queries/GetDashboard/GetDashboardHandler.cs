@@ -11,7 +11,7 @@ namespace TaskManagement.API.Features.Dashboard.Queries.GetDashboard
         public async Task<ApiResponse<DashboardDto>> Handle(GetDashboardQuery query, CancellationToken ct)
         {
             var tasks = await db.Tasks
-                .Where(t => t.UserId == query.UserId)
+                .Where(t => t.UserId == query.UserId && !t.IsDeleted)
                 .ToListAsync(ct);
 
             var dashboard = new DashboardDto

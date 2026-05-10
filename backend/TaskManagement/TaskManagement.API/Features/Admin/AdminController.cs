@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagement.API.Features.Admin.Commands.AssignTask;
 using TaskManagement.API.Features.Admin.Commands.DeleteUser;
+using TaskManagement.API.Features.Admin.Commands.RestoreTask;
 using TaskManagement.API.Features.Admin.Commands.UpdateUserRole;
 using TaskManagement.API.Features.Admin.Queries.GetAllTasks;
 using TaskManagement.API.Features.Admin.Queries.GetAllUsers;
+using TaskManagement.API.Features.Admin.Queries.GetDeletedTasks;
 
 namespace TaskManagement.API.Features.Admin
 {
@@ -31,6 +33,23 @@ namespace TaskManagement.API.Features.Admin
         public async Task<IActionResult> GetAllTasks()
         {
             var result = await mediator.Send(new GetAllTasksQuery());
+            return StatusCode((int)result.Status, result);
+        }
+
+        [HttpGet("tasks/deleted")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetDeletedTasks()
+        {
+            var result = await mediator.Send(new GetDeletedTasksQuery());
+            return StatusCode((int)result.Status, result);
+        }
+
+        [HttpPatch("tasks/{id}/restore")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> RestoreTask(Guid id)
+        {
+            var result = await mediator.Send(new RestoreTaskCommand(id));
             return StatusCode((int)result.Status, result);
         }
 
