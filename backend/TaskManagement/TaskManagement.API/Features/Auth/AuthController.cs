@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using TaskManagement.API.Features.Auth.Commands.ForgotPassword;
 using TaskManagement.API.Features.Auth.Commands.Login;
 using TaskManagement.API.Features.Auth.Commands.RefreshToken;
 using TaskManagement.API.Features.Auth.Commands.Register;
+using TaskManagement.API.Features.Auth.Commands.ResetPassword;
 
 namespace TaskManagement.API.Features.Auth
 {
@@ -33,6 +35,22 @@ namespace TaskManagement.API.Features.Auth
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> RefreshToken(RefreshTokenCommand command)
+        {
+            var result = await mediator.Send(command);
+            return StatusCode((int)result.Status, result);
+        }
+
+        [HttpPost("forgot-password")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordCommand command)
+        {
+            var result = await mediator.Send(command);
+            return StatusCode((int)result.Status, result);
+        }
+
+        [HttpPost("reset-password")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<IActionResult> ResetPassword(ResetPasswordCommand command)
         {
             var result = await mediator.Send(command);
             return StatusCode((int)result.Status, result);

@@ -10,6 +10,8 @@ namespace TaskManagement.API.Domain.Entities
         public string PasswordHash { get; set; } = string.Empty;
         public UserRole Role { get; set; } = UserRole.User;
         public string RefreshToken { get; set; } = string.Empty;
+        public string? OtpCode { get; set; }
+        public DateTime? OtpExpiry { get; set; }
         public DateTime? RefreshTokenExpiry { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public ICollection<TaskItem> Tasks { get; set; } = new List<TaskItem>();
