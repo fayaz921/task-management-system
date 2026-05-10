@@ -11,7 +11,7 @@ builder.Host.UseSerilog((context, config) =>
 // Extensions
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddJwt(builder.Configuration);
-builder.Services.AddApplication();
+builder.Services.AddApplication(builder.Configuration);
 
 // Controllers
 builder.Services.AddControllers();
