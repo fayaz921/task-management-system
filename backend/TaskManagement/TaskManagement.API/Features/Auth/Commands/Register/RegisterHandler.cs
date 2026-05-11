@@ -26,7 +26,7 @@ namespace TaskManagement.API.Features.Auth.Commands.Register
             await db.Users.AddAsync(user, ct);
             await db.SaveChangesAsync(ct);
 
-            return ApiResponse<string>.Created("User registered successfully");
+            return ApiResponse<string>.Created(string.Empty,"User registered successfully");
         }
     }
 
