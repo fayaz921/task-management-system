@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using TaskManagement.API.Domain.Enums;
 using TaskManagement.API.Features.Tasks.Commands.CreateTask;
 using TaskManagement.API.Features.Tasks.Commands.DeleteTask;
 using TaskManagement.API.Features.Tasks.Commands.UpdateTask;
@@ -32,9 +33,11 @@ namespace TaskManagement.API.Features.Tasks
 
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetTasks()
+        public async Task<IActionResult> GetTasks([FromQuery] string? search, [FromQuery] TaskItemStatus? status,
+                             [FromQuery] TaskPriority? priority, [FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+
         {
-            var result = await mediator.Send(new GetTasksQuery(GetUserId()));
+            var result = await mediator.Send(new GetTasksQuery(GetUserId(), search, status, priority, page, pageSize));
             return StatusCode((int)result.Status, result);
         }
 
