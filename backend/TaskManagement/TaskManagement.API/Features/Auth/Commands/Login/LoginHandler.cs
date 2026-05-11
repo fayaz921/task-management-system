@@ -1,8 +1,7 @@
-﻿using BCrypt.Net;
-using MediatR;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 using TaskManagement.API.Common.ApiResponse;
+using TaskManagement.API.Common.Exceptions;
 using TaskManagement.API.Infrastructure.Persistence.Data;
 using TaskManagement.API.Infrastructure.Services.JWT;
 
@@ -15,13 +14,13 @@ namespace TaskManagement.API.Features.Auth.Commands.Login
             var user = await appDbContext.Users.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
             if (user is null)
             {
-                throw new UnauthorizedAccessException("Invalid email or password");
+                throw new UnauthorizedException("Invalid email or password");
             }
 
             var isPasswordValid = BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash);
             if (!isPasswordValid)
             {
-                throw new UnauthorizedAccessException("Invalid email or password");
+                throw new UnauthorizedException("Invalid email or password");
             }
 
             var accessToken = tokenService.GenerateToken(user);
