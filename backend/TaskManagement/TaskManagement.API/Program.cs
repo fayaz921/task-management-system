@@ -12,6 +12,7 @@ builder.Host.UseSerilog((context, config) =>
 builder.Services.AddDatabase(builder.Configuration);
 builder.Services.AddJwt(builder.Configuration);
 builder.Services.AddApplication(builder.Configuration);
+builder.Services.AddCorsPolicy(builder.Configuration);
 
 // Controllers
 builder.Services.AddControllers();
@@ -29,6 +30,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHttpsRedirection();
+app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
