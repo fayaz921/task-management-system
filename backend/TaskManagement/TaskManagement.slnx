@@ -1,4 +1,6 @@
 <Solution>
   <Project Path="TaskManagement.API/TaskManagement.API.csproj" />
-  <Project Path="TaskMangement.Tests/TaskMangement.Tests.csproj" Id="2ccf9a2e-11da-4f3b-8746-bc97b14984f7" />
+  <Project Path="TaskMangement.Tests/TaskMangement.Tests.csproj" Id="2ccf9a2e-11da-4f3b-8746-bc97b14984f7">
+    <Build Solution="Debug|*" Project="false" />
+  </Project>
 </Solution>
