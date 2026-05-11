@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.API.Common.ApiResponse;
 using TaskManagement.API.Common.Exceptions;
-using TaskManagement.API.Infrastructure.Data;
+using TaskManagement.API.Infrastructure.Persistence.Data;
 using TaskManagement.API.Infrastructure.Services.JWT;
 
 namespace TaskManagement.API.Features.Auth.Commands.RefreshToken

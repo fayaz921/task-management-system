@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Net;
 using TaskManagement.API.Common.ApiResponse;
-using TaskManagement.API.Infrastructure.Data;
+using TaskManagement.API.Infrastructure.Persistence.Data;
 using TaskManagement.API.Infrastructure.Services.JWT;
 
 namespace TaskManagement.API.Features.Auth.Commands.Login

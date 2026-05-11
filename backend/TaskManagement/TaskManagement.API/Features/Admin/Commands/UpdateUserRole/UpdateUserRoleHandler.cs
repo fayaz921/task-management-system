@@ -4,7 +4,7 @@ using TaskManagement.API.Common.ApiResponse;
 using TaskManagement.API.Common.Exceptions;
 using TaskManagement.API.Features.Users;
 using TaskManagement.API.Features.Users.Mappings;
-using TaskManagement.API.Infrastructure.Data;
+using TaskManagement.API.Infrastructure.Persistence.Data;
 
 namespace TaskManagement.API.Features.Admin.Commands.UpdateUserRole
 {
