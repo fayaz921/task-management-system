@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.API.Common.ApiResponse;
 using TaskManagement.API.Domain.Enums;
-using TaskManagement.API.Infrastructure.Data;
+using TaskManagement.API.Infrastructure.Persistence.Data;
 
 namespace TaskManagement.API.Features.Dashboard.Queries.GetDashboard
 {

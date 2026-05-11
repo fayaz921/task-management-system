@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TaskManagement.API.Common.ApiResponse;
-using TaskManagement.API.Infrastructure.Data;
+using TaskManagement.API.Infrastructure.Persistence.Data;
 using TaskManagement.API.Infrastructure.Services.Email;
 
 namespace TaskManagement.API.Features.Auth.Commands.ForgotPassword

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TaskManagement.API.Domain.Entities;
 
-namespace TaskManagement.API.Infrastructure.Data
+namespace TaskManagement.API.Infrastructure.Persistence.Data
 {
     public class AppDbContext : DbContext
     {

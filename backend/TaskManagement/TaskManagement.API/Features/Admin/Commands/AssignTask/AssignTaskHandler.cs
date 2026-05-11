@@ -5,7 +5,7 @@ using TaskManagement.API.Common.Exceptions;
 using TaskManagement.API.Domain.Entities;
 using TaskManagement.API.Features.Tasks;
 using TaskManagement.API.Features.Tasks.Mappings;
-using TaskManagement.API.Infrastructure.Data;
+using TaskManagement.API.Infrastructure.Persistence.Data;
 
 namespace TaskManagement.API.Features.Admin.Commands.AssignTask
 {

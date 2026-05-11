@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using TaskManagement.API.Common.ApiResponse;
 using TaskManagement.API.Common.Exceptions;
 using TaskManagement.API.Features.Tasks.Mappings;
-using TaskManagement.API.Infrastructure.Data;
+using TaskManagement.API.Infrastructure.Persistence.Data;
 
 namespace TaskManagement.API.Features.Tasks.Commands.UpdateTaskStatus
 {
