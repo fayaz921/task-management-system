@@ -12,6 +12,9 @@ namespace TaskManagement.API.Infrastructure.Extensions
             services.Configure<JwtSettings>(configuration.GetSection("Jwt"));
             services.AddScoped<ITokenService, TokenService>();
 
+            var jwtKey = configuration["Jwt:Key"]
+        ?? throw new InvalidOperationException("JWT Key is not configured");
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
@@ -23,7 +26,7 @@ namespace TaskManagement.API.Infrastructure.Extensions
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = configuration["Jwt:Issuer"],
                         ValidAudience = configuration["Jwt:Audience"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
 
                     };
                 });
