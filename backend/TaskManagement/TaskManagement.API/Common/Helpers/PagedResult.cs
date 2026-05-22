@@ -1,4 +1,4 @@
-﻿namespace TaskManagement.API.Common
+﻿namespace TaskManagement.API.Common.Helpers
 {
     public class PagedResult<T>
     {
