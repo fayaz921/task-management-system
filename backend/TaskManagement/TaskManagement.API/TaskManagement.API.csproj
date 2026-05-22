@@ -30,7 +30,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Common\Helpers\" />
     <Folder Include="Domain\Interfaces\" />
   </ItemGroup>
 
