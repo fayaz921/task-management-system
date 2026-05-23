@@ -1,12 +1,9 @@
-import AuthShell, { Field, PrimaryButton } from '../../../components/auth/AuthShell'
+import AuthShell, { Field, PrimaryButton } from '../components/AuthShell'
 
 export default function ResetPasswordPage() {
   return (
-    <AuthShell
-      title="Set a new password"
-      subtitle="Pick a strong password you haven't used before."
-    >
-      <form onSubmit={(e) => e.preventDefault()}>
+    <AuthShell title="Set a new password" subtitle="Pick a strong password you haven't used before.">
+      <form onSubmit={(event) => event.preventDefault()} className="auth-form">
         <Field label="New password" type="password" placeholder="••••••••" autoComplete="new-password" />
         <Field label="Confirm password" type="password" placeholder="••••••••" autoComplete="new-password" />
         <PrimaryButton>Update password</PrimaryButton>
