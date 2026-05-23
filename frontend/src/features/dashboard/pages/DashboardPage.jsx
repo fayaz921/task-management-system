@@ -1,75 +1,72 @@
 import { motion } from 'framer-motion'
-import { CheckCircle2, TrendingUp, Zap } from 'lucide-react'
+import { CircleCheck, Clock, TrendingUp } from 'lucide-react'
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+  hidden: { opacity: 0, y: 12 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } },
 }
-const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } }
 
-const statCards = [
-  { label: 'Tasks today', value: '8', icon: CheckCircle2, color: 'var(--primary)' },
-  { label: 'Completion rate', value: '87%', icon: TrendingUp, color: '#34d399' },
-  { label: 'Productivity', value: '+12%', icon: Zap, color: 'var(--accent)' },
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.08 } },
+}
+
+const stats = [
+  { label: 'Tasks today', value: '8', icon: Clock, tone: 'primary' },
+  { label: 'Completed this week', value: '24', icon: CircleCheck, tone: 'success' },
+  { label: 'Productivity', value: '+18%', icon: TrendingUp, tone: 'accent' },
 ]
 
 const tasks = [
-  { title: 'Review Q3 roadmap', due: 'Today', priority: '#ef4444' },
-  { title: 'Design system audit', due: 'Tomorrow', priority: '#a78bfa' },
-  { title: 'API documentation update', due: 'Jun 2', priority: '#38bdf8' },
-  { title: 'Sprint planning meeting', due: 'Jun 3', priority: '#34d399' },
-  { title: 'Deploy v2.4 hotfix', due: 'Today', priority: '#ef4444' },
+  { title: 'Finalize Q3 product roadmap', time: 'Today · 3:00 PM', priority: 'High' },
+  { title: 'Design review with brand team', time: 'Tomorrow · 10:30 AM', priority: 'Med' },
+  { title: 'Ship onboarding email sequence', time: 'Fri · End of day', priority: 'High' },
+  { title: '1:1 with Priya', time: 'Mon · 9:00 AM', priority: 'Low' },
 ]
 
 export default function DashboardPage() {
   return (
-    <motion.div variants={stagger} initial="hidden" animate="show">
-      <motion.h1 variants={fadeUp} style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: '1.5rem' }}>
-        Good morning, Ada
-      </motion.h1>
+    <motion.div className="dash-page" variants={stagger} initial="hidden" animate="show">
+      <motion.header variants={fadeUp}>
+        <p>Good afternoon, Ada</p>
+        <h1>Here's your day</h1>
+      </motion.header>
 
-      {/* Stat cards */}
-      <motion.div variants={fadeUp} className="row g-3 mb-4">
-        {statCards.map((s) => {
-          const Icon = s.icon
+      <motion.section className="dash-stat-grid user" variants={stagger}>
+        {stats.map((stat) => {
+          const Icon = stat.icon
           return (
-            <div key={s.label} className="col-sm-4">
-              <div className="stat-card d-flex align-items-center gap-3">
-                <div
-                  style={{
-                    width: 44, height: 44,
-                    borderRadius: 12,
-                    background: `${s.color}15`,
-                    display: 'grid', placeItems: 'center',
-                    color: s.color,
-                  }}
-                >
-                  <Icon size={20} />
-                </div>
-                <div>
-                  <div className="stat-card-value">{s.value}</div>
-                  <div className="stat-card-label">{s.label}</div>
-                </div>
+            <motion.article key={stat.label} className="dash-stat-card" variants={fadeUp}>
+              <div>
+                <p>{stat.label}</p>
+                <Icon className={stat.tone} size={20} />
               </div>
-            </div>
+              <strong>{stat.value}</strong>
+            </motion.article>
           )
         })}
-      </motion.div>
+      </motion.section>
 
-      {/* Upcoming tasks */}
-      <motion.div variants={fadeUp}>
-        <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1rem' }}>Upcoming tasks</h2>
-        <div className="tf-card p-2">
-          {tasks.map((task) => (
-            <div key={task.title} className="task-row">
-              <div className="task-checkbox" />
-              <div style={{ flex: 1, fontWeight: 500, fontSize: '0.9rem' }}>{task.title}</div>
-              <span className="due-chip">{task.due}</span>
-              <div className="priority-dot" style={{ background: task.priority }} />
-            </div>
-          ))}
+      <motion.section className="dash-panel" variants={fadeUp}>
+        <div className="dash-panel-header">
+          <h2>Upcoming tasks</h2>
+          <span>{tasks.length} items</span>
         </div>
-      </motion.div>
+        <ul className="dash-task-list">
+          {tasks.map((task) => (
+            <li key={task.title}>
+              <div className="dash-task-left">
+                <span className="dash-task-check" />
+                <div>
+                  <p>{task.title}</p>
+                  <small>{task.time}</small>
+                </div>
+              </div>
+              <span className="dash-priority">{task.priority}</span>
+            </li>
+          ))}
+        </ul>
+      </motion.section>
     </motion.div>
   )
 }
