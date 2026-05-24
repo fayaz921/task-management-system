@@ -5,12 +5,23 @@ import UserLayout from '../layouts/UserLayout'
 import AdminLayout from '../layouts/AdminLayout'
 
 import LandingPage from '../features/landing/pages/LandingPage'
+import WhyUsPage from '../features/landing/pages/WhyUsPage'
+import PricingPage from '../features/landing/pages/PricingPage'
 import LoginPage from '../features/auth/pages/LoginPage'
 import RegisterPage from '../features/auth/pages/RegisterPage'
 import ForgotPasswordPage from '../features/auth/pages/ForgotPasswordPage'
 import ResetPasswordPage from '../features/auth/pages/ResetPasswordPage'
 import DashboardPage from '../features/dashboard/pages/DashboardPage'
+import TaskListPage from '../features/tasks/pages/TaskListPage'
+import CreateTaskPage from '../features/tasks/pages/CreateTaskPage'
+import TaskDetailPage from '../features/tasks/pages/TaskDetailPage'
+import EditTaskPage from '../features/tasks/pages/EditTaskPage'
 import AdminDashboardPage from '../features/admin/pages/AdminDashboardPage'
+import AdminUsersPage from '../features/admin/pages/AdminUsersPage'
+import AdminTasksPage from '../features/admin/pages/AdminTasksPage'
+import AdminDeletedTasksPage from '../features/admin/pages/AdminDeletedTasksPage'
+import AdminAssignTaskPage from '../features/admin/pages/AdminAssignTaskPage'
+import UserProfilePage from '../features/users/pages/UserProfilePage'
 
 /* Placeholder for sub-pages that aren't the main dashboard */
 function Placeholder({ title }) {
@@ -28,6 +39,8 @@ export default function AppRoutes() {
       element: <PublicLayout />,
       children: [
         { path: '/', element: <LandingPage /> },
+        { path: '/why-us', element: <WhyUsPage /> },
+        { path: '/pricing', element: <PricingPage /> },
       ],
     },
     {
@@ -44,10 +57,14 @@ export default function AppRoutes() {
       element: <UserLayout />,
       children: [
         { index: true, element: <DashboardPage /> },
-        { path: 'tasks', element: <Placeholder title="My Tasks" /> },
+        { path: 'tasks', element: <TaskListPage /> },
+        { path: 'tasks/create', element: <CreateTaskPage /> },
+        { path: 'tasks/:id', element: <TaskDetailPage /> },
+        { path: 'tasks/:id/edit', element: <EditTaskPage /> },
         { path: 'inbox', element: <Placeholder title="Inbox" /> },
         { path: 'today', element: <Placeholder title="Today" /> },
         { path: 'starred', element: <Placeholder title="Starred" /> },
+        { path: 'profile', element: <UserProfilePage /> },
       ],
     },
     {
@@ -55,9 +72,10 @@ export default function AppRoutes() {
       element: <AdminLayout />,
       children: [
         { index: true, element: <AdminDashboardPage /> },
-        { path: 'users', element: <Placeholder title="All Users" /> },
-        { path: 'tasks', element: <Placeholder title="All Tasks" /> },
-        { path: 'deleted', element: <Placeholder title="Deleted Tasks" /> },
+        { path: 'users', element: <AdminUsersPage /> },
+        { path: 'tasks', element: <AdminTasksPage /> },
+        { path: 'tasks/assign', element: <AdminAssignTaskPage /> },
+        { path: 'deleted', element: <AdminDeletedTasksPage /> },
       ],
     },
     {
