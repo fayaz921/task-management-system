@@ -1,7 +1,10 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { ArrowRight, Sparkles } from 'lucide-react'
 
 export default function Navbar() {
+  const location = useLocation()
+  const isLandingPage = location.pathname === '/'
+
   return (
     <header className="landing-header">
       <div className="landing-container landing-nav">
@@ -13,9 +16,19 @@ export default function Navbar() {
         </Link>
 
         <nav className="landing-nav-links">
-          <a href="#features">Features</a>
-          <a href="#stats">Why us</a>
-          <a href="#cta">Pricing</a>
+          {isLandingPage ? (
+            <>
+              <a href="#features">Features</a>
+              <a href="#stats">Why us</a>
+              <a href="#cta">Pricing</a>
+            </>
+          ) : (
+            <>
+              <Link to="/#features">Features</Link>
+              <Link to="/why-us">Why us</Link>
+              <Link to="/pricing">Pricing</Link>
+            </>
+          )}
         </nav>
 
         <div className="landing-nav-actions">
