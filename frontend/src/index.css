@@ -672,6 +672,7 @@ a { color: inherit; text-decoration: none; }
 .landing-stats {
   border-block: 1px solid var(--border);
   background: rgba(243, 244, 249, 0.4);
+  padding: 5rem 0;
 }
 
 .landing-stats-grid {

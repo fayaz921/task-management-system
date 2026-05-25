@@ -227,7 +227,7 @@ export default function DashboardShell({ variant = 'user' }) {
                     <strong>{user.name}</strong>
                     <small>{user.email}</small>
                   </div>
-                  <Link to="/profile" className="dash-dropdown-action">
+                  <Link to="/app/profile" className="dash-dropdown-action">
                     <User size={16} />
                     Profile
                   </Link>

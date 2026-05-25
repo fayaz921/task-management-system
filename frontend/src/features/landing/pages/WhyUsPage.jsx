@@ -76,13 +76,14 @@ export default function WhyUsPage() {
         </div>
       </section>
 
-      <section className="landing-stats">
+      <section className="landing-stats pt-5 pb-5">
         <div className="landing-container">
           <motion.div className="landing-section-heading" variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true }}>
+            <motion.p variants={fadeUp}>Comparison</motion.p>
             <motion.h2 variants={fadeUp}>TaskFlow vs. the rest</motion.h2>
             <motion.p variants={fadeUp}>See why teams prefer TaskFlow</motion.p>
           </motion.div>
-          <motion.div className="landing-container" variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true }}>
+          <motion.div className="p-4" variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true }}>
             <table className="table" style={{ background: 'var(--card)', borderRadius: 'var(--radius)', overflow: 'hidden' }}>
               <thead>
                 <tr>
