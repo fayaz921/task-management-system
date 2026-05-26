@@ -2,19 +2,17 @@ import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
 import { Search, Filter, Shield, Trash2, UserCheck } from 'lucide-react'
 import ConfirmModal from '../../../shared/components/ConfirmModal'
-
-const mockUsers = [
-  { id: 1, name: 'Ada Lovelace', email: 'ada@taskflow.app', role: 'User', createdAt: '2024-01-15' },
-  { id: 2, name: 'Priya Patel', email: 'priya@taskflow.app', role: 'User', createdAt: '2024-02-20' },
-  { id: 3, name: 'Marcus Chen', email: 'marcus@taskflow.app', role: 'Admin', createdAt: '2024-01-10' },
-  { id: 4, name: 'Layla Hassan', email: 'layla@taskflow.app', role: 'User', createdAt: '2024-03-05' },
-  { id: 5, name: 'Grace Hopper', email: 'grace@taskflow.app', role: 'Admin', createdAt: '2024-01-05' },
-]
+import Spinner from '../../../shared/components/Spinner'
+import useGetAllUsers from '../hooks/useGetAllUsers'
+import useDeleteUser from '../hooks/useDeleteUser'
+import useUpdateUserRole from '../hooks/useUpdateUserRole'
 
 const fadeUp = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } } }
 
 export default function AdminUsersPage() {
-  const [users, setUsers] = useState(mockUsers)
+  const { users, loading, error, refetch } = useGetAllUsers()
+  const { deleteUser, loading: deleteLoading } = useDeleteUser()
+  const { updateUserRole, loading: roleLoading } = useUpdateUserRole()
   const [search, setSearch] = useState('')
   const [roleModal, setRoleModal] = useState(null)
   const [deleteModal, setDeleteModal] = useState(null)
@@ -22,20 +20,33 @@ export default function AdminUsersPage() {
 
   const filteredUsers = useMemo(() => {
     return users.filter(u => 
-      u.name.toLowerCase().includes(search.toLowerCase()) || 
-      u.email.toLowerCase().includes(search.toLowerCase())
+      (u.fullName?.toLowerCase() || '').includes(search.toLowerCase()) || 
+      (u.email?.toLowerCase() || '').includes(search.toLowerCase())
     )
   }, [users, search])
 
-  const handleRoleChange = () => {
-    setUsers(prev => prev.map(u => u.id === roleModal ? { ...u, role: selectedRole } : u))
+  const handleRoleChange = async () => {
+    try {
+      await updateUserRole(roleModal, selectedRole === 'Admin' ? 1 : 0)
+      refetch()
+    } catch (err) {
+      console.error('Role update failed:', err)
+    }
     setRoleModal(null)
   }
 
-  const handleDelete = () => {
-    setUsers(prev => prev.filter(u => u.id !== deleteModal))
+  const handleDelete = async () => {
+    try {
+      await deleteUser(deleteModal)
+      refetch()
+    } catch (err) {
+      console.error('Delete failed:', err)
+    }
     setDeleteModal(null)
   }
+
+  if (loading) return <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}><Spinner /></div>
+  if (error) return <div className="alert alert-danger">{error}</div>
 
   return (
     <motion.div className="dash-page" initial="hidden" animate="show" variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}>
@@ -81,9 +92,9 @@ export default function AdminUsersPage() {
                     <td>
                       <div className="d-flex align-items-center gap-2">
                         <div className="avatar-circle" style={{ width: '32px', height: '32px', fontSize: '0.75rem' }}>
-                          {user.name.split(' ').map(n => n[0]).join('')}
+                          {(user.fullName || '').split(' ').map(n => n[0]).join('')}
                         </div>
-                        <span>{user.name}</span>
+                        <span>{user.fullName}</span>
                       </div>
                     </td>
                     <td>{user.email}</td>
@@ -92,7 +103,7 @@ export default function AdminUsersPage() {
                         {user.role}
                       </span>
                     </td>
-                    <td>{new Date(user.createdAt).toLocaleDateString()}</td>
+                    <td>{user.createdAt && new Date(user.createdAt).toLocaleDateString()}</td>
                     <td>
                       <div className="d-flex gap-2">
                         <button 
