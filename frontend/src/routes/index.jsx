@@ -3,6 +3,8 @@ import PublicLayout from '../layouts/PublicLayout'
 import AuthLayout from '../layouts/AuthLayout'
 import UserLayout from '../layouts/UserLayout'
 import AdminLayout from '../layouts/AdminLayout'
+import ProtectedRoute from './ProtectedRoute'
+import AdminRoute from './AdminRoute'
 
 import LandingPage from '../features/landing/pages/LandingPage'
 import WhyUsPage from '../features/landing/pages/WhyUsPage'
@@ -22,6 +24,7 @@ import AdminTasksPage from '../features/admin/pages/AdminTasksPage'
 import AdminDeletedTasksPage from '../features/admin/pages/AdminDeletedTasksPage'
 import AdminAssignTaskPage from '../features/admin/pages/AdminAssignTaskPage'
 import UserProfilePage from '../features/users/pages/UserProfilePage'
+import { useAuthStore } from '../features/auth/store/authStore'
 
 /* Placeholder for sub-pages that aren't the main dashboard */
 function Placeholder({ title }) {
@@ -33,49 +36,68 @@ function Placeholder({ title }) {
   )
 }
 
+function PublicRoute() {
+  const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
+  if (isLoggedIn) {
+    const user = useAuthStore.getState().user
+    return user?.role === 'Admin' ? <Navigate to="/admin" replace /> : <Navigate to="/app" replace />
+  }
+  return <></>
+}
+
 export default function AppRoutes() {
   return useRoutes([
     {
       element: <PublicLayout />,
       children: [
-        { path: '/', element: <LandingPage /> },
-        { path: '/why-us', element: <WhyUsPage /> },
-        { path: '/pricing', element: <PricingPage /> },
+        { path: '/', element: <><PublicRoute /><LandingPage /></> },
+        { path: '/why-us', element: <><PublicRoute /><WhyUsPage /></> },
+        { path: '/pricing', element: <><PublicRoute /><PricingPage /></> },
       ],
     },
     {
       element: <AuthLayout />,
       children: [
-        { path: '/login', element: <LoginPage /> },
-        { path: '/register', element: <RegisterPage /> },
-        { path: '/forgot-password', element: <ForgotPasswordPage /> },
-        { path: '/reset-password', element: <ResetPasswordPage /> },
+        { path: '/login', element: <><PublicRoute /><LoginPage /></> },
+        { path: '/register', element: <><PublicRoute /><RegisterPage /></> },
+        { path: '/forgot-password', element: <><PublicRoute /><ForgotPasswordPage /></> },
+        { path: '/reset-password', element: <><PublicRoute /><ResetPasswordPage /></> },
       ],
     },
     {
       path: '/app',
-      element: <UserLayout />,
+      element: <ProtectedRoute />,
       children: [
-        { index: true, element: <DashboardPage /> },
-        { path: 'tasks', element: <TaskListPage /> },
-        { path: 'tasks/create', element: <CreateTaskPage /> },
-        { path: 'tasks/:id', element: <TaskDetailPage /> },
-        { path: 'tasks/:id/edit', element: <EditTaskPage /> },
-        { path: 'inbox', element: <Placeholder title="Inbox" /> },
-        { path: 'today', element: <Placeholder title="Today" /> },
-        { path: 'starred', element: <Placeholder title="Starred" /> },
-        { path: 'profile', element: <UserProfilePage /> },
+        {
+          element: <UserLayout />,
+          children: [
+            { index: true, element: <DashboardPage /> },
+            { path: 'tasks', element: <TaskListPage /> },
+            { path: 'tasks/create', element: <CreateTaskPage /> },
+            { path: 'tasks/:id', element: <TaskDetailPage /> },
+            { path: 'tasks/:id/edit', element: <EditTaskPage /> },
+            { path: 'inbox', element: <Placeholder title="Inbox" /> },
+            { path: 'today', element: <Placeholder title="Today" /> },
+            { path: 'starred', element: <Placeholder title="Starred" /> },
+            { path: 'profile', element: <UserProfilePage /> },
+          ],
+        },
       ],
     },
     {
       path: '/admin',
-      element: <AdminLayout />,
+      element: <AdminRoute />,
       children: [
-        { index: true, element: <AdminDashboardPage /> },
-        { path: 'users', element: <AdminUsersPage /> },
-        { path: 'tasks', element: <AdminTasksPage /> },
-        { path: 'tasks/assign', element: <AdminAssignTaskPage /> },
-        { path: 'deleted', element: <AdminDeletedTasksPage /> },
+        {
+          element: <AdminLayout />,
+          children: [
+            { index: true, element: <AdminDashboardPage /> },
+            { path: 'users', element: <AdminUsersPage /> },
+            { path: 'tasks', element: <AdminTasksPage /> },
+            { path: 'tasks/assign', element: <AdminAssignTaskPage /> },
+            { path: 'deleted', element: <AdminDeletedTasksPage /> },
+          ],
+        },
       ],
     },
     {

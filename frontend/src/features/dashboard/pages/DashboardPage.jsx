@@ -1,5 +1,8 @@
 import { motion } from 'framer-motion'
 import { CircleCheck, Clock, TrendingUp } from 'lucide-react'
+import { useAuthStore } from '../../auth/store/authStore'
+import useGetDashboard from '../hooks/useGetDashboard'
+import Spinner from '../../../shared/components/Spinner'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 12 },
@@ -11,24 +14,23 @@ const stagger = {
   show: { transition: { staggerChildren: 0.08 } },
 }
 
-const stats = [
-  { label: 'Tasks today', value: '8', icon: Clock, tone: 'primary' },
-  { label: 'Completed this week', value: '24', icon: CircleCheck, tone: 'success' },
-  { label: 'Productivity', value: '+18%', icon: TrendingUp, tone: 'accent' },
-]
-
-const tasks = [
-  { title: 'Finalize Q3 product roadmap', time: 'Today · 3:00 PM', priority: 'High' },
-  { title: 'Design review with brand team', time: 'Tomorrow · 10:30 AM', priority: 'Med' },
-  { title: 'Ship onboarding email sequence', time: 'Fri · End of day', priority: 'High' },
-  { title: '1:1 with Priya', time: 'Mon · 9:00 AM', priority: 'Low' },
-]
-
 export default function DashboardPage() {
+  const { data, loading, error } = useGetDashboard()
+  const user = useAuthStore((state) => state.user)
+
+  if (loading) return <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}><Spinner /></div>
+  if (error) return <div className="alert alert-danger">{error}</div>
+
+  const stats = [
+    { label: 'Total Tasks', value: data?.totalTasks || 0, icon: CircleCheck, tone: 'primary' },
+    { label: 'Pending Tasks', value: data?.pendingTasks || 0, icon: Clock, tone: 'warning' },
+    { label: 'Completed Tasks', value: data?.completedTasks || 0, icon: CircleCheck, tone: 'success' },
+  ]
+
   return (
     <motion.div className="dash-page" variants={stagger} initial="hidden" animate="show">
       <motion.header variants={fadeUp}>
-        <p>Good afternoon, Ada</p>
+        <p>Good afternoon, {user?.fullName || 'User'}</p>
         <h1>Here's your day</h1>
       </motion.header>
 
@@ -45,27 +47,6 @@ export default function DashboardPage() {
             </motion.article>
           )
         })}
-      </motion.section>
-
-      <motion.section className="dash-panel" variants={fadeUp}>
-        <div className="dash-panel-header">
-          <h2>Upcoming tasks</h2>
-          <span>{tasks.length} items</span>
-        </div>
-        <ul className="dash-task-list">
-          {tasks.map((task) => (
-            <li key={task.title}>
-              <div className="dash-task-left">
-                <span className="dash-task-check" />
-                <div>
-                  <p>{task.title}</p>
-                  <small>{task.time}</small>
-                </div>
-              </div>
-              <span className="dash-priority">{task.priority}</span>
-            </li>
-          ))}
-        </ul>
       </motion.section>
     </motion.div>
   )
