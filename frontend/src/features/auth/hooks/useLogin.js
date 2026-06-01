@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../../../lib/axios'
 import { useAuthStore } from '../store/authStore'
-import { UserRole } from '../../../shared/utils/constants'
+import { isAdminRole } from '../../../shared/utils/constants'
 
 const decodeJWT = (token) => {
   try {
@@ -33,7 +33,7 @@ export default function useLogin() {
         const { accessToken, refreshToken } = response.data.data
         const userData = decodeJWT(accessToken)
         setAuth(userData, accessToken, refreshToken)
-        if (userData?.role === UserRole.Admin) {
+        if (isAdminRole(userData?.role)) {
           navigate('/admin')
         } else {
           navigate('/app')

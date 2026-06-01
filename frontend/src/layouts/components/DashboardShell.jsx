@@ -19,6 +19,8 @@ import {
   User,
   Users,
 } from 'lucide-react'
+import useLogout from '../../features/auth/hooks/useLogout'
+import { useAuthStore } from '../../features/auth/store/authStore'
 
 const userNav = [
   { label: 'Dashboard', icon: LayoutDashboard, to: '/app' },
@@ -46,29 +48,23 @@ export default function DashboardShell({ variant = 'user' }) {
   const isAdmin = variant === 'admin'
   const location = useLocation()
   const navItems = isAdmin ? adminNav : userNav
-  const user = isAdmin
-    ? {
-        name: 'Grace Hopper',
-        initials: 'GH',
-        email: 'grace@taskflow.app',
-        search: 'Search users, tasks, logs…',
-        notifications: [
-          { text: '3 new user signups in the last hour', time: 'Just now' },
-          { text: 'Storage at 78% of monthly quota', time: '20 minutes ago' },
-          { text: 'Weekly audit log is ready', time: 'This morning' },
-        ],
-      }
-    : {
-        name: 'Ada Lovelace',
-        initials: 'AL',
-        email: 'ada@taskflow.app',
-        search: 'Search your tasks…',
-        notifications: [
-          { text: "Priya commented on 'Q3 roadmap'", time: '2 minutes ago' },
-          { text: "Task 'Design review' is due today", time: '1 hour ago' },
-          { text: 'You earned a 12-day streak', time: 'This morning' },
-        ],
-      }
+  const authUser = useAuthStore((state) => state.user)
+  const { signOut, loading: logoutLoading } = useLogout()
+  const fullName = authUser?.fullName || 'User'
+  const initials = fullName
+    .split(' ')
+    .filter(Boolean)
+    .map((part) => part[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase() || 'U'
+  const user = {
+    name: fullName,
+    initials,
+    email: authUser?.email || '',
+    search: isAdmin ? 'Search users and tasks...' : 'Search your tasks...',
+    notifications: [],
+  }
 
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
@@ -198,18 +194,16 @@ export default function DashboardShell({ variant = 'user' }) {
               onClick={() => toggleDropdown('notifications')}
             >
               <Bell size={20} />
-              <span>{user.notifications.length}</span>
+              {user.notifications.length > 0 && <span>{user.notifications.length}</span>}
             </button>
             <AnimatePresence>
               {openDropdown === 'notifications' && (
                 <motion.div className="dash-dropdown dash-notification-dropdown" {...dropdownMotion}>
                   <div className="dash-dropdown-title">Notifications</div>
-                  {user.notifications.map((notification) => (
-                    <div key={`${notification.text}-${notification.time}`} className="dash-notification-item">
-                      <p>{notification.text}</p>
-                      <small>{notification.time}</small>
-                    </div>
-                  ))}
+                  <div className="dash-notification-item">
+                    <p>No new notifications</p>
+                    <small>You're all caught up</small>
+                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -227,7 +221,7 @@ export default function DashboardShell({ variant = 'user' }) {
                     <strong>{user.name}</strong>
                     <small>{user.email}</small>
                   </div>
-                  <Link to="/app/profile" className="dash-dropdown-action">
+                  <Link to={isAdmin ? '/admin/profile' : '/app/profile'} className="dash-dropdown-action">
                     <User size={16} />
                     Profile
                   </Link>
@@ -235,10 +229,10 @@ export default function DashboardShell({ variant = 'user' }) {
                     <Settings size={16} />
                     Settings
                   </button>
-                  <Link to="/login" className="dash-dropdown-action danger">
+                  <button className="dash-dropdown-action danger" type="button" onClick={signOut} disabled={logoutLoading}>
                     <LogOut size={16} />
-                    Sign out
-                  </Link>
+                    {logoutLoading ? 'Signing out...' : 'Sign out'}
+                  </button>
                 </motion.div>
               )}
             </AnimatePresence>

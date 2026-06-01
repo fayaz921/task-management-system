@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Plus } from 'lucide-react'
 import Spinner from '../../../shared/components/Spinner'
@@ -10,7 +10,6 @@ const fadeUp = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transi
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } }
 
 export default function AdminAssignTaskPage() {
-  const navigate = useNavigate()
   const { assignTask, loading, error } = useAssignTask()
   const { users, loading: usersLoading } = useGetAllUsers()
   const [formData, setFormData] = useState({

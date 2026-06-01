@@ -92,6 +92,9 @@ export default function RegisterPage() {
             onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
           />
         </label>
+        {Object.values(errors).filter(Boolean).map((message) => (
+          <div key={message} className="text-danger small mt-1">{message}</div>
+        ))}
         {error && <div className="text-danger small mt-2">{error}</div>}
         <p className="auth-disclaimer">By signing up you agree to our Terms of Service and Privacy Policy.</p>
         <PrimaryButton>{loading ? 'Creating account...' : 'Create account'}</PrimaryButton>

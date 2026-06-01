@@ -1,7 +1,7 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { CalendarDays, ChevronLeft, ChevronRight, Edit, Eye, Filter, Search, Trash2, Plus } from 'lucide-react'
+import { CalendarDays, ChevronLeft, ChevronRight, Edit, Eye, Search, Trash2, Plus } from 'lucide-react'
 import ConfirmModal from '../../../shared/components/ConfirmModal'
 import Spinner from '../../../shared/components/Spinner'
 import useGetTasks from '../hooks/useGetTasks'
@@ -17,47 +17,25 @@ const fadeUp = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transi
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } }
 
 export default function TaskListPage() {
-  const { tasks, totalCount, page, pageSize, filters, setPage, setFilters } = useTaskStore()
-  const { loading: deleteLoading, deleteTask } = useDeleteTask()
+  const { totalCount, page, pageSize, filters, setPage, setFilters } = useTaskStore()
+  const { deleteTask } = useDeleteTask()
   const [deleteId, setDeleteId] = useState(null)
-  const [localLoading, setLocalLoading] = useState(false)
 
-  const { tasks: fetchedTasks, totalCount: fetchedTotal } = useGetTasks()
-  const displayTasks = fetchedTasks.length > 0 ? fetchedTasks : []
-
-  useEffect(() => {
-    if (fetchedTasks.length > 0) {
-      useTaskStore.setState({ tasks: fetchedTasks, totalCount: fetchedTotal })
-    }
-  }, [fetchedTasks, fetchedTotal])
-
-  const filteredTasks = useMemo(() => {
-    return displayTasks.filter(task => {
-      const matchesSearch = task.title?.toLowerCase().includes(filters.search?.toLowerCase() || '')
-      const matchesStatus = !filters.status || statusLabels[task.status] === filters.status
-      const matchesPriority = !filters.priority || priorityLabels[task.priority] === filters.priority
-      return matchesSearch && matchesStatus && matchesPriority
-    })
-  }, [displayTasks, filters])
-
-  const tasksPerPage = 6
-  const totalPages = Math.max(1, Math.ceil(filteredTasks.length / tasksPerPage))
-  const paginatedTasks = filteredTasks.slice((page - 1) * tasksPerPage, page * tasksPerPage)
+  const { tasks, loading, error } = useGetTasks()
+  const totalPages = Math.max(1, Math.ceil(totalCount / pageSize))
 
   const handleDelete = async (id) => {
-    setLocalLoading(true)
     try {
       await deleteTask(id)
       useTaskStore.setState({ tasks: useTaskStore.getState().tasks.filter(t => t.id !== id) })
       setDeleteId(null)
     } catch (err) {
       console.error('Delete failed:', err)
-    } finally {
-      setLocalLoading(false)
     }
   }
 
-  if (!displayTasks.length && totalCount > 0) return <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}><Spinner /></div>
+  if (loading) return <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}><Spinner /></div>
+  if (error) return <div className="alert alert-danger">{error}</div>
 
   return (
     <motion.div className="dash-page" variants={stagger} initial="hidden" animate="show">
@@ -81,19 +59,19 @@ export default function TaskListPage() {
           </div>
           <select className="tf-input" style={{ width: '180px' }} value={filters.status} onChange={e => setFilters({ status: e.target.value })}>
             <option value="">All Status</option>
-            <option value="Pending">Pending</option>
-            <option value="InProgress">InProgress</option>
-            <option value="Completed">Completed</option>
+            <option value="0">Pending</option>
+            <option value="1">InProgress</option>
+            <option value="2">Completed</option>
           </select>
           <select className="tf-input" style={{ width: '180px' }} value={filters.priority} onChange={e => setFilters({ priority: e.target.value })}>
             <option value="">All Priority</option>
-            <option value="Low">Low</option>
-            <option value="Medium">Medium</option>
-            <option value="High">High</option>
+            <option value="0">Low</option>
+            <option value="1">Medium</option>
+            <option value="2">High</option>
           </select>
         </div>
 
-        {paginatedTasks.length === 0 ? (
+        {tasks.length === 0 ? (
           <motion.div className="text-center py-5" variants={fadeUp}>
             <CalendarDays size={48} className="text-muted mb-3" />
             <h4>No tasks found</h4>
@@ -101,7 +79,7 @@ export default function TaskListPage() {
           </motion.div>
         ) : (
           <motion.div className="row g-4" variants={stagger}>
-            {paginatedTasks.map(task => (
+            {tasks.map(task => (
               <motion.div key={task.id} className="col-12 col-md-6 col-lg-4" variants={fadeUp}>
                 <div className="tf-card h-100 p-3 d-flex flex-column">
                   <div className="d-flex justify-content-between align-items-start mb-2">
@@ -150,6 +128,7 @@ export default function TaskListPage() {
             message="Are you sure you want to delete this task? This action cannot be undone."
             onConfirm={() => handleDelete(deleteId)}
             onCancel={() => setDeleteId(null)}
+            isOpen={!!deleteId}
           />
         )}
       </AnimatePresence>

@@ -1,18 +1,19 @@
 import { useState, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { Search, Filter, Shield, Trash2, UserCheck } from 'lucide-react'
+import { Search, Trash2, UserCheck } from 'lucide-react'
 import ConfirmModal from '../../../shared/components/ConfirmModal'
 import Spinner from '../../../shared/components/Spinner'
 import useGetAllUsers from '../hooks/useGetAllUsers'
 import useDeleteUser from '../hooks/useDeleteUser'
 import useUpdateUserRole from '../hooks/useUpdateUserRole'
+import { getRoleLabel, isAdminRole, UserRole } from '../../../shared/utils/constants'
 
 const fadeUp = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } } }
 
 export default function AdminUsersPage() {
   const { users, loading, error, refetch } = useGetAllUsers()
-  const { deleteUser, loading: deleteLoading } = useDeleteUser()
-  const { updateUserRole, loading: roleLoading } = useUpdateUserRole()
+  const { deleteUser } = useDeleteUser()
+  const { updateUserRole } = useUpdateUserRole()
   const [search, setSearch] = useState('')
   const [roleModal, setRoleModal] = useState(null)
   const [deleteModal, setDeleteModal] = useState(null)
@@ -27,7 +28,7 @@ export default function AdminUsersPage() {
 
   const handleRoleChange = async () => {
     try {
-      await updateUserRole(roleModal, selectedRole === 'Admin' ? 1 : 0)
+      await updateUserRole(roleModal, selectedRole === UserRole.Admin ? UserRole.AdminValue : UserRole.UserValue)
       refetch()
     } catch (err) {
       console.error('Role update failed:', err)
@@ -99,8 +100,8 @@ export default function AdminUsersPage() {
                     </td>
                     <td>{user.email}</td>
                     <td>
-                      <span className={`badge ${user.role === 'Admin' ? 'bg-danger' : 'bg-primary'}`}>
-                        {user.role}
+                      <span className={`badge ${isAdminRole(user.role) ? 'bg-danger' : 'bg-primary'}`}>
+                        {getRoleLabel(user.role)}
                       </span>
                     </td>
                     <td>{user.createdAt && new Date(user.createdAt).toLocaleDateString()}</td>
@@ -108,7 +109,7 @@ export default function AdminUsersPage() {
                       <div className="d-flex gap-2">
                         <button 
                           className="btn btn-sm btn-outline-primary"
-                          onClick={() => { setRoleModal(user.id); setSelectedRole(user.role === 'Admin' ? 'User' : 'Admin') }}
+                          onClick={() => { setRoleModal(user.id); setSelectedRole(isAdminRole(user.role) ? UserRole.User : UserRole.Admin) }}
                         >
                           Change Role
                         </button>

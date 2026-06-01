@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Plus } from 'lucide-react'
 import useCreateTask from '../hooks/useCreateTask'
@@ -9,9 +9,7 @@ const fadeUp = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transi
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } }
 
 export default function CreateTaskPage() {
-  const navigate = useNavigate()
   const { createTask, loading, error } = useCreateTask()
-  const [success, setSuccess] = useState(false)
 
   const [formData, setFormData] = useState({
     title: '',
@@ -36,10 +34,6 @@ export default function CreateTaskPage() {
     if (!validate()) return
     createTask(formData)
   }
-
-  useEffect(() => {
-    if (loading) setSuccess(false)
-  }, [loading])
 
   return (
     <motion.div className="dash-page" variants={stagger} initial="hidden" animate="show">

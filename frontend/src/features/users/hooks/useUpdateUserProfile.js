@@ -23,6 +23,7 @@ export default function useUpdateUserProfile() {
         )
         setSuccess(true)
         setTimeout(() => setSuccess(false), 3000)
+        return updatedUser
       } else {
         setError(response.data.message || 'Failed to update profile')
       }
@@ -31,6 +32,7 @@ export default function useUpdateUserProfile() {
     } finally {
       setLoading(false)
     }
+    return null
   }
 
   return { updateProfile, loading, error, success }

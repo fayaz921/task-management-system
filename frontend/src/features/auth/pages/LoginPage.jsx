@@ -52,6 +52,9 @@ export default function LoginPage() {
           onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           required
         />
+        {Object.values(errors).filter(Boolean).map((message) => (
+          <div key={message} className="text-danger small mt-1">{message}</div>
+        ))}
         {error && <div className="text-danger small mt-2">{error}</div>}
         <PrimaryButton>{loading ? 'Signing in...' : 'Sign in'}</PrimaryButton>
       </form>
