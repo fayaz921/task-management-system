@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import api from '../../../lib/axios'
-import { TaskStatus, TaskPriority } from '../../../shared/utils/constants'
 
 export default function useCreateTask() {
   const [loading, setLoading] = useState(false)

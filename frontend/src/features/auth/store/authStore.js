@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { UserRole } from '../../../shared/utils/constants'
+import { isAdminRole } from '../../../shared/utils/constants'
 
 export const useAuthStore = create(
   persist(
@@ -18,7 +18,7 @@ export const useAuthStore = create(
         set({ user: null, accessToken: null, refreshToken: null, isLoggedIn: false })
       },
 
-      isAdmin: () => get().user?.role === UserRole.Admin,
+      isAdmin: () => isAdminRole(get().user?.role),
     }),
     {
       name: 'auth-storage',

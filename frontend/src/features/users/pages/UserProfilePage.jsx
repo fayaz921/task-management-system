@@ -4,17 +4,20 @@ import { User, Mail, CalendarDays, Save } from 'lucide-react'
 import Spinner from '../../../shared/components/Spinner'
 import useGetUserProfile from '../hooks/useGetUserProfile'
 import useUpdateUserProfile from '../hooks/useUpdateUserProfile'
+import { getRoleLabel } from '../../../shared/utils/constants'
 
 const fadeUp = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: 'easeOut' } } }
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } }
 
 export default function UserProfilePage() {
   const { profile, loading: fetchLoading, error: fetchError } = useGetUserProfile()
-  const { updateProfile, loading, error } = useUpdateUserProfile()
+  const { updateProfile, loading, error, success } = useUpdateUserProfile()
   const [formData, setFormData] = useState({ fullName: '', email: '' })
+  const [displayProfile, setDisplayProfile] = useState(null)
 
   useEffect(() => {
     if (profile) {
+      setDisplayProfile(profile)
       setFormData({
         fullName: profile.fullName || '',
         email: profile.email || ''
@@ -22,9 +25,16 @@ export default function UserProfilePage() {
     }
   }, [profile])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    updateProfile(formData)
+    const updated = await updateProfile(formData)
+    if (updated) {
+      setDisplayProfile((current) => ({ ...(current || profile), ...updated }))
+      setFormData({
+        fullName: updated.fullName || '',
+        email: updated.email || '',
+      })
+    }
   }
 
   if (fetchLoading) return <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}><Spinner /></div>
@@ -40,23 +50,24 @@ export default function UserProfilePage() {
       <motion.section className="dash-panel" style={{ maxWidth: '500px' }} variants={fadeUp}>
         <div className="d-flex align-items-center gap-3 mb-4">
           <div className="avatar-circle" style={{ width: '64px', height: '64px', fontSize: '1.25rem' }}>
-            {profile?.fullName?.split(' ').map(n => n[0]).join('') || 'U'}
+            {displayProfile?.fullName?.split(' ').map(n => n[0]).join('') || 'U'}
           </div>
           <div>
-            <h5 className="mb-1">{profile?.fullName}</h5>
-            <span className="badge bg-primary">{profile?.role || 'User'}</span>
+            <h5 className="mb-1">{displayProfile?.fullName}</h5>
+            <span className="badge bg-primary">{getRoleLabel(displayProfile?.role)}</span>
           </div>
         </div>
 
         <div className="d-flex align-items-center gap-2 text-muted mb-4">
           <CalendarDays size={16} />
-          <span>Member since {profile?.createdAt ? new Date(profile.createdAt).toLocaleDateString() : ''}</span>
+          <span>Member since {displayProfile?.createdAt ? new Date(displayProfile.createdAt).toLocaleDateString() : ''}</span>
         </div>
       </motion.section>
 
       <motion.section className="dash-panel" variants={fadeUp}>
         <h5 className="mb-4">Edit Profile</h5>
         {error && <div className="alert alert-danger mb-3">{error}</div>}
+        {success && <div className="alert alert-success mb-3">Profile updated successfully</div>}
         <form onSubmit={handleSubmit} className="d-grid gap-3">
           <div>
             <label className="tf-label">Full Name</label>

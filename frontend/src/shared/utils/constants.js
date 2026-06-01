@@ -1,4 +1,6 @@
 export const UserRole = {
+  UserValue: 0,
+  AdminValue: 1,
   User: 'User',
   Admin: 'Admin',
 }
@@ -14,3 +16,10 @@ export const TaskPriority = {
   Medium: 1,
   High: 2,
 }
+
+export const getRoleLabel = (role) => {
+  if (role === UserRole.Admin || role === UserRole.AdminValue) return UserRole.Admin
+  return UserRole.User
+}
+
+export const isAdminRole = (role) => getRoleLabel(role) === UserRole.Admin

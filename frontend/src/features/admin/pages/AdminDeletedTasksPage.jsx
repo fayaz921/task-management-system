@@ -1,11 +1,10 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Search, Trash2, RotateCcw } from 'lucide-react'
+import { Trash2, RotateCcw } from 'lucide-react'
 import ConfirmModal from '../../../shared/components/ConfirmModal'
 import Spinner from '../../../shared/components/Spinner'
 import useGetDeletedTasks from '../hooks/useGetDeletedTasks'
 import useRestoreTask from '../hooks/useRestoreTask'
-import { UserRole } from '../../../shared/utils/constants'
 
 const priorityLabels = { 0: 'Low', 1: 'Medium', 2: 'High' }
 const priorityColors = { 0: 'secondary', 1: 'warning', 2: 'danger' }

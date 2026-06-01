@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { CircleCheck, Clock, TrendingUp } from 'lucide-react'
+import { CircleCheck, Clock } from 'lucide-react'
 import { useAuthStore } from '../../auth/store/authStore'
 import useGetDashboard from '../hooks/useGetDashboard'
 import Spinner from '../../../shared/components/Spinner'

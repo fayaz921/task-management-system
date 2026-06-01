@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
-import { Activity, ListTodo, ShieldAlert, Users } from 'lucide-react'
+import { CheckCircle, ListTodo, Trash2, Users } from 'lucide-react'
+import Spinner from '../../../shared/components/Spinner'
+import useGetAdminDashboard from '../hooks/useGetAdminDashboard'
 
 const fadeUp = {
   hidden: { opacity: 0, y: 12 },
@@ -11,21 +13,20 @@ const stagger = {
   show: { transition: { staggerChildren: 0.08 } },
 }
 
-const metrics = [
-  { label: 'Total users', value: '12,480', note: '+248 this week', icon: Users },
-  { label: 'Active tasks', value: '94,712', note: '+3.2% MoM', icon: ListTodo },
-  { label: 'Open reports', value: '7', note: '2 high priority', icon: ShieldAlert },
-  { label: 'API uptime', value: '99.99%', note: 'Last 30 days', icon: Activity },
-]
-
-const activity = [
-  { actor: 'Priya Patel', text: "deleted task 'Old marketing brief'", time: '2 min ago' },
-  { actor: 'Marcus Chen', text: 'upgraded to Team plan', time: '18 min ago' },
-  { actor: 'Layla Hassan', text: 'invited 4 new members', time: '1 hour ago' },
-  { actor: 'System', text: 'ran scheduled cleanup of trashed tasks', time: '3 hours ago' },
-]
-
 export default function AdminDashboardPage() {
+  const { data, loading, error } = useGetAdminDashboard()
+
+  if (loading) return <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}><Spinner /></div>
+  if (error) return <div className="alert alert-danger">{error}</div>
+
+  const metrics = [
+    { label: 'Total users', value: data?.totalUsers || 0, note: 'Registered accounts', icon: Users },
+    { label: 'Active tasks', value: data?.activeTasks || 0, note: 'Not deleted', icon: ListTodo },
+    { label: 'Completed tasks', value: data?.completedTasks || 0, note: 'Finished work', icon: CheckCircle },
+    { label: 'Deleted tasks', value: data?.deletedTasks || 0, note: 'Available to restore', icon: Trash2 },
+  ]
+  const activity = data?.recentActivity || []
+
   return (
     <motion.div className="dash-page" variants={stagger} initial="hidden" animate="show">
       <motion.header className="admin-page-header" variants={fadeUp}>
@@ -57,13 +58,22 @@ export default function AdminDashboardPage() {
           <h2>Recent activity</h2>
         </div>
         <ul className="dash-activity-list">
+          {activity.length === 0 && (
+            <li>
+              <p>
+                <strong>System</strong>
+                <span>No recent activity yet</span>
+              </p>
+              <small>Now</small>
+            </li>
+          )}
           {activity.map((item) => (
-            <li key={`${item.actor}-${item.time}`}>
+            <li key={`${item.actor}-${item.text}-${item.time}`}>
               <p>
                 <strong>{item.actor}</strong>
                 <span>{item.text}</span>
               </p>
-              <small>{item.time}</small>
+              <small>{item.time ? new Date(item.time).toLocaleString() : ''}</small>
             </li>
           ))}
         </ul>

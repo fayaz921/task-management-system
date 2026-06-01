@@ -61,6 +61,9 @@ export default function ResetPasswordPage() {
           onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
           required
         />
+        {Object.values(errors).filter(Boolean).map((message) => (
+          <div key={message} className="text-danger small mt-1">{message}</div>
+        ))}
         {error && <div className="text-danger small mt-2">{error}</div>}
         <PrimaryButton>{loading ? 'Updating...' : 'Update password'}</PrimaryButton>
       </form>

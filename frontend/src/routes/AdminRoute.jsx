@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useAuthStore } from '../features/auth/store/authStore'
-import { UserRole } from '../shared/utils/constants'
+import { isAdminRole } from '../shared/utils/constants'
 
 export default function AdminRoute() {
   const isLoggedIn = useAuthStore((state) => state.isLoggedIn)
@@ -10,7 +10,7 @@ export default function AdminRoute() {
     return <Navigate to="/login" replace />
   }
   
-  if (user?.role !== UserRole.Admin) {
+  if (!isAdminRole(user?.role)) {
     return <Navigate to="/app" replace />
   }
   

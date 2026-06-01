@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { ArrowLeft, Save } from 'lucide-react'
 import useGetTaskById from '../hooks/useGetTaskById'
@@ -11,10 +11,8 @@ const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } }
 
 export default function EditTaskPage() {
   const { id } = useParams()
-  const navigate = useNavigate()
   const { task, loading: fetchLoading, error } = useGetTaskById(id)
   const { updateTask, loading, error: updateError } = useUpdateTask()
-  const [success, setSuccess] = useState(false)
 
   const [formData, setFormData] = useState({
     title: '',
