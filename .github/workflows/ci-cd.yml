@@ -1,0 +1,101 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  backend-build-test:
+    name: Backend Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore Backend Dependencies
+        run: dotnet restore backend/TaskManagement/TaskManagement.slnx
+
+      - name: Build Backend (Release)
+        run: dotnet build backend/TaskManagement/TaskManagement.slnx -c Release --no-restore
+
+      - name: Run Backend Unit Tests
+        run: dotnet test backend/TaskManagement/TaskMangement.Tests/TaskMangement.Tests.csproj -c Release --no-build --verbosity normal
+
+  frontend-build:
+    name: Frontend Build & Compile Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js (22)
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install Frontend Dependencies
+        run: npm ci
+
+      - name: Build Frontend SPA
+        run: npm run build
+
+  build-and-push-images:
+    name: Build & Push Docker Images
+    needs: [backend-build-test, frontend-build]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set Short Git SHA
+        id: vars
+        run: echo "SHORT_SHA=$(echo ${{ github.sha }} | cut -c1-7)" >> $GITHUB_ENV
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry (ghcr.io)
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Backend Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend/TaskManagement
+          file: ./backend/TaskManagement/TaskManagement.API/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/fayaz921/task-management-system-api:latest
+            ghcr.io/fayaz921/task-management-system-api:${{ env.SHORT_SHA }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build & Push Frontend Image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          build-args: |
+            VITE_API_URL=http://localhost:8080/api
+          push: true
+          tags: |
+            ghcr.io/fayaz921/task-management-system-frontend:latest
+            ghcr.io/fayaz921/task-management-system-frontend:${{ env.SHORT_SHA }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

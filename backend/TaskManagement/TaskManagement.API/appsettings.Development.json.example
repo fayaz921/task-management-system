@@ -36,12 +36,11 @@
     }
   },
 
-
   "ConnectionStrings": {
-    "DefaultConnection": "Server=M-FAYAZ;Database=TaskManagementDB;Trusted_Connection=True;TrustServerCertificate=True"
+    "DefaultConnection": "Server=YOUR_SERVER_NAME;Database=TaskManagementDB;Trusted_Connection=True;TrustServerCertificate=True"
   },
   "Jwt": {
-    "Key": "YourSuperSecretKeyHereMakeItLongAndSecure123!",
+    "Key": "YOUR_JWT_KEY_HERE",
     "Issuer": "TaskManagement.API",
     "Audience": "TaskManagement.Client",
     "ExpireDays": 7
@@ -49,8 +48,8 @@
   "EmailSettings": {
     "Host": "smtp.gmail.com",
     "Port": 587,
-    "Username": "mfayaz21703@gmail.com",
-    "Password": "dmxi ehei ncmn wemo",
+    "Username": "YOUR_EMAIL_HERE",
+    "Password": "YOUR_APP_PASSWORD_HERE",
     "FromName": "Task Management System"
   },
 
@@ -59,5 +58,3 @@
   },
   "AllowedHosts": "*"
 }
- 
-
