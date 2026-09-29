@@ -1,0 +1,53 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=${SA_PASSWORD}
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -Q \"SELECT 1\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  backend:
+    build:
+      context: ./backend/TaskManagement
+      dockerfile: TaskManagement.API/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT:-Development}
+      - ConnectionStrings__DefaultConnection=Server=sqlserver,1433;Database=TaskFlowDb;User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True
+      - Jwt__Key=${JWT_KEY}
+      - Jwt__Issuer=${JWT_ISSUER:-TaskManagement.API}
+      - Jwt__Audience=${JWT_AUDIENCE:-TaskManagement.Client}
+      - Jwt__ExpireDays=${JWT_EXPIRE_DAYS:-7}
+      - EmailSettings__Host=${EMAIL_HOST:-smtp.gmail.com}
+      - EmailSettings__Port=${EMAIL_PORT:-587}
+      - EmailSettings__Username=${EMAIL_USERNAME}
+      - EmailSettings__Password=${EMAIL_PASSWORD}
+      - EmailSettings__FromName=${EMAIL_FROM_NAME:-Task Management System}
+      - Cors__AllowedOrigins__0=http://localhost:3000
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8080/api}
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  mssql_data:
